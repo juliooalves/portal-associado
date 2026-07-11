@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AB3BDB8A-33BA-4C79-8093-751396B7B8BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProAuto.PortalAssociado.Web", "src\ProAuto.PortalAssociado.Web\ProAuto.PortalAssociado.Web.csproj", "{BFB57CFA-DCF9-454A-A55A-D812A55E1C73}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{326A4B73-304F-4EF6-B12D-FC0922C20BFA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProAuto.PortalAssociado.UnitTests", "tests\ProAuto.PortalAssociado.UnitTests\ProAuto.PortalAssociado.UnitTests.csproj", "{7F560E55-92B6-43E6-99B6-AEF010440ECF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProAuto.PortalAssociado.IntegrationTests", "tests\ProAuto.PortalAssociado.IntegrationTests\ProAuto.PortalAssociado.IntegrationTests.csproj", "{CEDA2B96-0ADD-408C-9A71-32F986C19992}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFB57CFA-DCF9-454A-A55A-D812A55E1C73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFB57CFA-DCF9-454A-A55A-D812A55E1C73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFB57CFA-DCF9-454A-A55A-D812A55E1C73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFB57CFA-DCF9-454A-A55A-D812A55E1C73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F560E55-92B6-43E6-99B6-AEF010440ECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F560E55-92B6-43E6-99B6-AEF010440ECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F560E55-92B6-43E6-99B6-AEF010440ECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F560E55-92B6-43E6-99B6-AEF010440ECF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEDA2B96-0ADD-408C-9A71-32F986C19992}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEDA2B96-0ADD-408C-9A71-32F986C19992}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEDA2B96-0ADD-408C-9A71-32F986C19992}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEDA2B96-0ADD-408C-9A71-32F986C19992}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BFB57CFA-DCF9-454A-A55A-D812A55E1C73} = {AB3BDB8A-33BA-4C79-8093-751396B7B8BB}
+		{7F560E55-92B6-43E6-99B6-AEF010440ECF} = {326A4B73-304F-4EF6-B12D-FC0922C20BFA}
+		{CEDA2B96-0ADD-408C-9A71-32F986C19992} = {326A4B73-304F-4EF6-B12D-FC0922C20BFA}
+	EndGlobalSection
+EndGlobal
