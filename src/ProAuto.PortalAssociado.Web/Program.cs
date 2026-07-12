@@ -1,10 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using ProAuto.PortalAssociado.Web.Data;
+using ProAuto.PortalAssociado.Web.Repositories;
+using ProAuto.PortalAssociado.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddScoped<IAssociadoRepository, AssociadoRepository>();
+builder.Services.AddScoped<IAssociadoService, AssociadoService>();
 
 builder.Services.AddControllersWithViews();
 
