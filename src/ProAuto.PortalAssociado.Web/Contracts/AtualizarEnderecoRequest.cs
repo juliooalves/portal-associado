@@ -6,26 +6,26 @@ namespace ProAuto.PortalAssociado.Web.Contracts;
 public sealed class AtualizarEnderecoRequest
 {
     [Required(ErrorMessage = "Informe o logradouro.")]
-    [MaxLength(200)]
+    [MaxLength(100)]
     [Display(Name = "Logradouro")]
     public string Logradouro { get; init; } = string.Empty;
 
     [Required(ErrorMessage = "Informe o número.")]
-    [MaxLength(20)]
+    [MaxLength(10)]
     [Display(Name = "Número")]
     public string Numero { get; init; } = string.Empty;
 
-    [MaxLength(100)]
+    [MaxLength(50)]
     [Display(Name = "Complemento")]
     public string? Complemento { get; init; }
 
     [Required(ErrorMessage = "Informe o bairro.")]
-    [MaxLength(100)]
+    [MaxLength(60)]
     [Display(Name = "Bairro")]
     public string Bairro { get; init; } = string.Empty;
 
     [Required(ErrorMessage = "Informe a cidade.")]
-    [MaxLength(100)]
+    [MaxLength(60)]
     [Display(Name = "Cidade")]
     public string Cidade { get; init; } = string.Empty;
 

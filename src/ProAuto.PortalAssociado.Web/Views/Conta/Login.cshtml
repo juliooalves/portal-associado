@@ -3,31 +3,37 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-12 col-sm-8 col-md-6 col-lg-4">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <h1 class="h4 card-title text-center mb-1">Portal do Associado</h1>
-                <p class="text-muted text-center mb-4">Acesse com seu CPF e a placa do veículo</p>
+<div class="login-split">
+    <div class="login-brand">
+        <div class="login-brand-copy">
+            <svg width="32" height="32" viewBox="0 0 256 256" fill="#fff" aria-hidden="true"><path d="M208,40H48A16,16,0,0,0,32,56v58.78c0,89.61,75.82,116.82,91,121.53a15.53,15.53,0,0,0,10,0c15.2-4.71,91-31.92,91-121.53V56A16,16,0,0,0,208,40Z"/></svg>
+            <h2>Sua proteção, sempre à mão</h2>
+            <p>Acesse o portal para acompanhar sua proteção veicular e seus dados cadastrais.</p>
+        </div>
+    </div>
+    <div class="login-form-panel">
+        <div class="login-form">
+            <h1>Portal do Associado</h1>
+            <p class="login-sub">Acesse com seu CPF e a placa do veículo.</p>
 
-                <form asp-controller="Conta" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
-                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+            <form asp-controller="Conta" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                <div asp-validation-summary="ModelOnly"></div>
 
-                    <div class="mb-3">
-                        <label asp-for="Cpf" class="form-label"></label>
-                        <input asp-for="Cpf" class="form-control" placeholder="000.000.000-00" autocomplete="username" autofocus />
-                        <span asp-validation-for="Cpf" class="text-danger"></span>
-                    </div>
+                <div class="field" style="margin-bottom: var(--space-3);">
+                    <label asp-for="Cpf"></label>
+                    <input asp-for="Cpf" class="input" placeholder="000.000.000-00" autocomplete="username" autofocus
+                           inputmode="numeric" data-mask="cpf" maxlength="14" />
+                    <span asp-validation-for="Cpf" class="field-error"></span>
+                </div>
 
-                    <div class="mb-4">
-                        <label asp-for="Placa" class="form-label"></label>
-                        <input asp-for="Placa" class="form-control" placeholder="ABC1D23" autocomplete="off" />
-                        <span asp-validation-for="Placa" class="text-danger"></span>
-                    </div>
+                <div class="field" style="margin-bottom: var(--space-2);">
+                    <label asp-for="Placa"></label>
+                    <input asp-for="Placa" class="input" placeholder="ABC-1234 ou ABC1D23" autocomplete="off" maxlength="8" data-mask="placa" />
+                    <span asp-validation-for="Placa" class="field-error"></span>
+                </div>
 
-                    <button type="submit" class="btn btn-primary w-100">Entrar</button>
-                </form>
-            </div>
+                <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+            </form>
         </div>
     </div>
 </div>

@@ -3,87 +3,116 @@
     ViewData["Title"] = "Meus Dados";
 }
 
-<div class="row justify-content-center">
-    <div class="col-12 col-lg-8">
-        <h1 class="h3 mb-4">Meus Dados</h1>
+<div class="content-wrap">
+    <div class="content">
+        <h1>Meus dados</h1>
 
         @if (TempData["Sucesso"] is string sucesso)
         {
-            <div class="alert alert-success" role="alert">@sucesso</div>
+            <div class="card elev-sm alert-success">
+                <span class="tag tag-accent-2">@sucesso</span>
+            </div>
         }
 
-        <div class="card shadow-sm mb-4">
-            <div class="card-header">Dados cadastrais</div>
-            <div class="card-body">
-                <dl class="row mb-0">
-                    <dt class="col-sm-3">Nome</dt>
-                    <dd class="col-sm-9">@Model.Dados.Nome</dd>
-
-                    <dt class="col-sm-3">CPF</dt>
-                    <dd class="col-sm-9">@Model.Dados.Cpf</dd>
-
-                    <dt class="col-sm-3">Placa</dt>
-                    <dd class="col-sm-9">@Model.Dados.Placa</dd>
-
-                    <dt class="col-sm-3">Telefone</dt>
-                    <dd class="col-sm-9 mb-0">@Model.Dados.Telefone</dd>
-                </dl>
-            </div>
+        <div class="card elev-sm" style="margin-bottom: var(--space-4);">
+            <div class="card-kicker">Dados cadastrais</div>
+            <dl class="dl-grid">
+                <dt class="text-muted">Nome</dt><dd>@Model.Dados.Nome</dd>
+                <dt class="text-muted">CPF</dt><dd>@Model.Dados.Cpf</dd>
+                <dt class="text-muted">Placa</dt><dd>@Model.Dados.Placa</dd>
+                <dt class="text-muted">Telefone</dt><dd>@Model.Dados.Telefone</dd>
+            </dl>
+            <p class="text-muted" style="font-size:12px; margin: var(--space-2) 0 0;">Esses dados são cadastrais — para corrigi-los, fale com o atendimento.</p>
         </div>
 
-        <div class="card shadow-sm">
-            <div class="card-header">Endereço</div>
-            <div class="card-body">
-                <form asp-controller="MeusDados" asp-action="AtualizarEndereco" method="post">
-                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+        <div class="card elev-sm">
+            <div class="card-kicker">Endereço</div>
+            <p class="text-muted" style="font-size:13px; margin: 0 0 var(--space-3);">O único dado que você pode atualizar por aqui.</p>
 
-                    <div class="row">
-                        <div class="col-md-8 mb-3">
-                            <label asp-for="Endereco.Logradouro" class="form-label"></label>
-                            <input asp-for="Endereco.Logradouro" class="form-control" />
-                            <span asp-validation-for="Endereco.Logradouro" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label asp-for="Endereco.Numero" class="form-label"></label>
-                            <input asp-for="Endereco.Numero" class="form-control" />
-                            <span asp-validation-for="Endereco.Numero" class="text-danger"></span>
-                        </div>
+            <form asp-controller="MeusDados" asp-action="AtualizarEndereco" method="post">
+                <div asp-validation-summary="ModelOnly"></div>
+
+                <div class="form-grid form-grid-logradouro">
+                    <div class="field">
+                        <label asp-for="Endereco.Logradouro"></label>
+                        <input asp-for="Endereco.Logradouro" class="input" maxlength="100" />
+                        <span asp-validation-for="Endereco.Logradouro" class="field-error"></span>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Endereco.Complemento" class="form-label"></label>
-                            <input asp-for="Endereco.Complemento" class="form-control" />
-                            <span asp-validation-for="Endereco.Complemento" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Endereco.Bairro" class="form-label"></label>
-                            <input asp-for="Endereco.Bairro" class="form-control" />
-                            <span asp-validation-for="Endereco.Bairro" class="text-danger"></span>
-                        </div>
+                    <div class="field">
+                        <label asp-for="Endereco.Numero"></label>
+                        <input asp-for="Endereco.Numero" class="input" data-mask="numero" maxlength="10" />
+                        <span asp-validation-for="Endereco.Numero" class="field-error"></span>
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Endereco.Cidade" class="form-label"></label>
-                            <input asp-for="Endereco.Cidade" class="form-control" />
-                            <span asp-validation-for="Endereco.Cidade" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-2 mb-3">
-                            <label asp-for="Endereco.Uf" class="form-label"></label>
-                            <input asp-for="Endereco.Uf" class="form-control" maxlength="2" />
-                            <span asp-validation-for="Endereco.Uf" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label asp-for="Endereco.Cep" class="form-label"></label>
-                            <input asp-for="Endereco.Cep" class="form-control" placeholder="00000-000" />
-                            <span asp-validation-for="Endereco.Cep" class="text-danger"></span>
-                        </div>
+                <div class="form-grid form-grid-bairro">
+                    <div class="field">
+                        <label asp-for="Endereco.Complemento"></label>
+                        <input asp-for="Endereco.Complemento" class="input" maxlength="50" />
+                        <span asp-validation-for="Endereco.Complemento" class="field-error"></span>
                     </div>
+                    <div class="field">
+                        <label asp-for="Endereco.Bairro"></label>
+                        <input asp-for="Endereco.Bairro" class="input" maxlength="60" />
+                        <span asp-validation-for="Endereco.Bairro" class="field-error"></span>
+                    </div>
+                </div>
 
+                <div class="form-grid form-grid-cidade" style="margin-bottom: var(--space-4);">
+                    <div class="field">
+                        <label asp-for="Endereco.Cidade"></label>
+                        <input asp-for="Endereco.Cidade" class="input" maxlength="60" />
+                        <span asp-validation-for="Endereco.Cidade" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Endereco.Uf"></label>
+                        <div class="combo" data-combo>
+                            <input asp-for="Endereco.Uf" class="input input-uf" maxlength="2" autocomplete="off"
+                                   role="combobox" aria-expanded="false" aria-controls="uf-options" />
+                            <ul class="combo-list" id="uf-options" role="listbox" hidden>
+                                <li role="option" data-value="AC">AC — Acre</li>
+                                <li role="option" data-value="AL">AL — Alagoas</li>
+                                <li role="option" data-value="AP">AP — Amapá</li>
+                                <li role="option" data-value="AM">AM — Amazonas</li>
+                                <li role="option" data-value="BA">BA — Bahia</li>
+                                <li role="option" data-value="CE">CE — Ceará</li>
+                                <li role="option" data-value="DF">DF — Distrito Federal</li>
+                                <li role="option" data-value="ES">ES — Espírito Santo</li>
+                                <li role="option" data-value="GO">GO — Goiás</li>
+                                <li role="option" data-value="MA">MA — Maranhão</li>
+                                <li role="option" data-value="MT">MT — Mato Grosso</li>
+                                <li role="option" data-value="MS">MS — Mato Grosso do Sul</li>
+                                <li role="option" data-value="MG">MG — Minas Gerais</li>
+                                <li role="option" data-value="PA">PA — Pará</li>
+                                <li role="option" data-value="PB">PB — Paraíba</li>
+                                <li role="option" data-value="PR">PR — Paraná</li>
+                                <li role="option" data-value="PE">PE — Pernambuco</li>
+                                <li role="option" data-value="PI">PI — Piauí</li>
+                                <li role="option" data-value="RJ">RJ — Rio de Janeiro</li>
+                                <li role="option" data-value="RN">RN — Rio Grande do Norte</li>
+                                <li role="option" data-value="RS">RS — Rio Grande do Sul</li>
+                                <li role="option" data-value="RO">RO — Rondônia</li>
+                                <li role="option" data-value="RR">RR — Roraima</li>
+                                <li role="option" data-value="SC">SC — Santa Catarina</li>
+                                <li role="option" data-value="SE">SE — Sergipe</li>
+                                <li role="option" data-value="SP">SP — São Paulo</li>
+                                <li role="option" data-value="TO">TO — Tocantins</li>
+                            </ul>
+                        </div>
+                        <span asp-validation-for="Endereco.Uf" class="field-error"></span>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Endereco.Cep"></label>
+                        <input asp-for="Endereco.Cep" class="input" placeholder="00000-000"
+                               inputmode="numeric" data-mask="cep" maxlength="9" />
+                        <span asp-validation-for="Endereco.Cep" class="field-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
                     <button type="submit" class="btn btn-primary">Salvar endereço</button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

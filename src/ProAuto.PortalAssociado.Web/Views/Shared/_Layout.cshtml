@@ -4,31 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Portal do Associado</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/zelo.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="bg-light">
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom mb-4">
-            <div class="container">
-                <a class="navbar-brand" asp-controller="MeusDados" asp-action="Index">Portal do Associado</a>
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="navbar-text">@User.Identity.Name</span>
-                        <form asp-controller="Conta" asp-action="Logout" method="post" class="mb-0">
-                            <button type="submit" class="btn btn-outline-secondary btn-sm">Sair</button>
-                        </form>
-                    </div>
-                }
-            </div>
-        </nav>
+<body>
+    <header class="nav">
+        <span class="nav-brand">Portal Associado</span>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <span class="text-muted" style="font-size:14px; white-space:nowrap;">@User.Identity.Name</span>
+            <form asp-controller="Conta" asp-action="Logout" method="post">
+                <button type="submit" class="btn btn-secondary">Sair</button>
+            </form>
+        }
     </header>
-    <div class="container">
-        <main role="main" class="pb-5">
-            @RenderBody()
-        </main>
-    </div>
+    <main>
+        @RenderBody()
+    </main>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
