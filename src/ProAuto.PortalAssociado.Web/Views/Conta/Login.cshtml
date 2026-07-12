@@ -1,0 +1,33 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h4 card-title text-center mb-1">Portal do Associado</h1>
+                <p class="text-muted text-center mb-4">Acesse com seu CPF e a placa do veículo</p>
+
+                <form asp-controller="Conta" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Cpf" class="form-label"></label>
+                        <input asp-for="Cpf" class="form-control" placeholder="000.000.000-00" autocomplete="username" autofocus />
+                        <span asp-validation-for="Cpf" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Placa" class="form-label"></label>
+                        <input asp-for="Placa" class="form-control" placeholder="ABC1D23" autocomplete="off" />
+                        <span asp-validation-for="Placa" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

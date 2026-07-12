@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -33,17 +32,9 @@ public sealed class AuthController : ControllerBase
             });
         }
 
-        var identity = new ClaimsIdentity(
-            new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, associado.Id.ToString()),
-                new Claim(ClaimTypes.Name, associado.Nome)
-            },
-            CookieAuthenticationDefaults.AuthenticationScheme);
-
         await HttpContext.SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(identity));
+            AssociadoPrincipalFactory.Create(associado));
 
         return Ok(AssociadoResponse.From(associado));
     }

@@ -4,23 +4,11 @@ using ProAuto.PortalAssociado.Web.Models;
 
 namespace ProAuto.PortalAssociado.Web.Controllers;
 
-public class HomeController : Controller
+public sealed class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
-    {
-        _logger = logger;
-    }
-
     public IActionResult Index()
     {
-        return View();
-    }
-
-    public IActionResult Privacy()
-    {
-        return View();
+        return RedirectToAction("Index", "MeusDados");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
