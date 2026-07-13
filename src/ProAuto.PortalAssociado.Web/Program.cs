@@ -29,7 +29,9 @@ builder.Services
                 return Task.CompletedTask;
             }
 
-            context.Response.Redirect(context.RedirectUri);
+            context.Response.Redirect(HttpMethods.IsGet(context.Request.Method)
+                ? context.RedirectUri
+                : context.Options.LoginPath);
             return Task.CompletedTask;
         };
         options.Events.OnRedirectToAccessDenied = context =>
