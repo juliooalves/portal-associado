@@ -29,7 +29,9 @@ builder.Services
                 return Task.CompletedTask;
             }
 
-            context.Response.Redirect(context.RedirectUri);
+            context.Response.Redirect(HttpMethods.IsGet(context.Request.Method)
+                ? context.RedirectUri
+                : context.Options.LoginPath);
             return Task.CompletedTask;
         };
         options.Events.OnRedirectToAccessDenied = context =>
@@ -70,12 +72,17 @@ if (app.Configuration.GetValue<bool>("Database:MigrateOnStartup"))
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/erro/500");
     app.UseHsts();
 }
 
 app.UseForwardedHeaders();
 app.UseHttpsRedirection();
+
+app.UseWhen(
+    context => !context.Request.Path.StartsWithSegments("/api"),
+    branch => branch.UseStatusCodePagesWithReExecute("/erro/{0}"));
+
 app.UseStaticFiles();
 
 app.UseRouting();

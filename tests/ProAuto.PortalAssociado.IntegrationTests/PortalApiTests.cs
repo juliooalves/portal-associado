@@ -200,4 +200,41 @@ public sealed class PortalApiTests : IClassFixture<PortalWebApplicationFactory>
         Assert.Equal("Avenida Paulista", joao.Endereco.Logradouro);
         Assert.NotEqual("Rua Alterada Pela Maria", joao.Endereco.Logradouro);
     }
+
+    [Fact]
+    public async Task UnknownPage_WhenAuthenticated_ReturnsNotFoundWithErrorPage()
+    {
+        var client = _factory.CreateHttpsClient();
+        await LoginAsync(client, "111.444.777-35", "ABC1234");
+
+        var response = await client.GetAsync("/pagina-que-nao-existe");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        var html = await response.Content.ReadAsStringAsync();
+        Assert.Contains("404", html);
+        Assert.Contains("encontrada", html);
+    }
+
+    [Fact]
+    public async Task UnknownPage_WithoutAuthentication_RedirectsToLogin()
+    {
+        var client = _factory.CreateHttpsClient(allowAutoRedirect: false);
+
+        var response = await client.GetAsync("/pagina-que-nao-existe");
+
+        Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.Equal("/login", response.Headers.Location!.ToString());
+    }
+
+    [Fact]
+    public async Task UnknownApiRoute_ReturnsBareNotFoundWithoutHtml()
+    {
+        var client = _factory.CreateHttpsClient();
+
+        var response = await client.GetAsync("/api/rota-que-nao-existe");
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        var body = await response.Content.ReadAsStringAsync();
+        Assert.DoesNotContain("<html", body, StringComparison.OrdinalIgnoreCase);
+    }
 }

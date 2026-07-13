@@ -1,8 +1,17 @@
 namespace ProAuto.PortalAssociado.Web.Models;
 
-public class ErrorViewModel
+public sealed class ErrorViewModel
 {
-    public string? RequestId { get; set; }
+    public ErrorViewModel(int statusCode, string titulo, string mensagem)
+    {
+        StatusCode = statusCode;
+        Titulo = titulo;
+        Mensagem = mensagem;
+    }
 
-    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+    public int StatusCode { get; }
+
+    public string Titulo { get; }
+
+    public string Mensagem { get; }
 }
