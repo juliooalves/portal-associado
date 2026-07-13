@@ -7,8 +7,8 @@ services:
       POSTGRES_USER: portal
       POSTGRES_PASSWORD: portal
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    volumes:
+      - "5433:${POSTGRES_PORT:-5432}:5432"
+    volumes:  
       - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U portal -d portal_associado"]
