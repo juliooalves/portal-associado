@@ -95,6 +95,8 @@ Os testes de integração exigem Docker em execução.
 
 Views: `/login` e `/meus-dados` (form POST clássico com anti-forgery e validação server-side).
 
+No formulário de endereço, o CEP é o primeiro campo e aciona a [API ViaCEP](https://viacep.com.br) para preencher logradouro, bairro, cidade e UF automaticamente. A consulta é feita no navegador (JS vanilla) e é só conveniência: se a API estiver indisponível, o formulário continua 100% preenchível à mão, e a validação server-side não depende dela.
+
 ## Decisões de arquitetura
 
 - **2 projetos + 2 de teste, camadas por pasta** (`Controllers/`, `Services/`, `Repositories/`, `Domain/`, `Contracts/`). Clean Architecture completa (4 assemblies) seria over-engineering para um domínio de uma entidade e duas operações — a testabilidade vem das interfaces (`IAssociadoService`, `IAssociadoRepository`), não da quantidade de projetos.
