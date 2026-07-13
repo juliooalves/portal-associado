@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
+    @if (ViewData["HideHeader"] as bool? != true)
+    {
     <header class="nav">
         <span class="nav-brand">Portal Associado</span>
         @if (User.Identity?.IsAuthenticated == true)
@@ -18,6 +20,7 @@
             </form>
         }
     </header>
+    }
     <main>
         @RenderBody()
     </main>
