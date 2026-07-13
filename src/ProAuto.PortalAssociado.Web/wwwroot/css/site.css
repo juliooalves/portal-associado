@@ -309,11 +309,11 @@ main {
 }
 
 .toast {
-  animation: toast-drop 2000ms var(--ease-out) both;
+  animation: toast-drop 300ms var(--ease-out) both;
 }
 
 .toast-leaving {
-  animation: toast-fade 2000ms var(--ease-out) forwards;
+  animation: toast-drop 400ms var(--ease-out) reverse forwards;
 }
 
 @keyframes toast-drop {
@@ -328,11 +328,6 @@ main {
   }
 }
 
-@keyframes toast-fade {
-  to {
-    opacity: 0;
-  }
-}
 
 @keyframes rise-in {
   from {

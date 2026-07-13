@@ -68,11 +68,11 @@ if (toastSources.length) {
     const hide = () => {
       clearTimeout(hideTimer);
       toast.classList.add('toast-leaving');
-      setTimeout(() => toast.remove(), 2100);
+      setTimeout(() => toast.remove(), 500);
     };
     dismiss.addEventListener('click', hide);
     region.appendChild(toast);
-    hideTimer = setTimeout(hide, 4000);
+    hideTimer = setTimeout(hide, 3200);
   });
 }
 
