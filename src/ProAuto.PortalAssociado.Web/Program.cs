@@ -1,5 +1,7 @@
+using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using ProAuto.PortalAssociado.Web.Data;
 using ProAuto.PortalAssociado.Web.Repositories;
@@ -52,6 +54,31 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
     options.KnownNetworks.Clear();
     options.KnownProxies.Clear();
+
+    // Só o reverse proxy (Caddy, na rede interna do Docker) pode setar X-Forwarded-*;
+    // um cliente externo não consegue falsificar o IP usado pelo rate limiter.
+    options.KnownNetworks.Add(new IPNetwork(System.Net.IPAddress.Parse("10.0.0.0"), 8));
+    options.KnownNetworks.Add(new IPNetwork(System.Net.IPAddress.Parse("172.16.0.0"), 12));
+    options.KnownNetworks.Add(new IPNetwork(System.Net.IPAddress.Parse("192.168.0.0"), 16));
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("login", context =>
+    {
+        var clientIp = context.Connection.RemoteIpAddress;
+
+        // Conexões reais sempre têm IP de origem; só o TestServer (in-memory) não tem.
+        return clientIp is null
+            ? RateLimitPartition.GetNoLimiter("no-ip")
+            : RateLimitPartition.GetFixedWindowLimiter(clientIp.ToString(), _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(15),
+                QueueLimit = 0
+            });
+    });
 });
 
 builder.Services.AddControllersWithViews();
@@ -86,6 +113,8 @@ app.UseWhen(
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();
