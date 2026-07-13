@@ -1,8 +1,11 @@
 # portal-associado
 
 [![CI](https://github.com/juliooalves/portal-associado/actions/workflows/ci.yml/badge.svg)](https://github.com/juliooalves/portal-associado/actions/workflows/ci.yml)
+[![Deploy](https://github.com/juliooalves/portal-associado/actions/workflows/deploy.yml/badge.svg)](https://github.com/juliooalves/portal-associado/actions/workflows/deploy.yml)
 
 Sistema de Atualização Cadastral — desafio técnico PROAUTO.
+
+**Demo online:** https://portal-associado.duckdns.org — login com as [credenciais de teste](#credenciais-de-teste-seed) abaixo.
 
 Portal de autoatendimento do associado: autentica com **CPF + placa**, visualiza seus dados (nome, CPF, placa, telefone e endereço) e pode atualizar **apenas o endereço**. API RESTful como base, com views MVC (Razor) por cima, no mesmo host.
 
@@ -104,6 +107,38 @@ Views: `/login` e `/meus-dados` (form POST clássico com anti-forgery e validaç
 - **Value objects com validação real**: `Cpf` valida dígito verificador (não só regex); `Placa` aceita formatos antigo e Mercosul; `Endereco` é owned entity (`OwnsOne`) — sem tabela própria.
 - Código em inglês, termos de domínio em português (`Associado`, `Placa`, `Endereco`).
 - `Nullable` habilitado + `TreatWarningsAsErrors` em todos os projetos.
+
+## Deploy e pipeline (CI/CD)
+
+A aplicação roda em produção numa VM da Oracle Cloud, publicada em https://portal-associado.duckdns.org. O caminho de um commit até produção é totalmente automatizado:
+
+```
+push na main
+   │
+   ▼
+CI (ci.yml) ── restore → build → testes (70, inclui integração com Testcontainers)
+   │  verde
+   ▼
+Deploy (deploy.yml)
+   ├─ 1. docker buildx: imagem multi-arch (amd64 + arm64) a partir do Dockerfile multi-stage
+   ├─ 2. push para ghcr.io/juliooalves/portal-associado (:latest + :sha do commit)
+   └─ 3. SSH na VM → docker compose pull → up -d (recria só o que mudou)
+```
+
+O Deploy só dispara com o CI verde (`workflow_run`) — commit que quebra teste nunca chega em produção. Também pode ser acionado manualmente (`workflow_dispatch`).
+
+### Infra de produção
+
+```
+Internet ──443──> Caddy (TLS automático via Let's Encrypt) ──8080──> app (Kestrel) ──> PostgreSQL
+```
+
+- **Caddy** como reverse proxy: emissão e renovação de certificado automáticas; o app consome `X-Forwarded-Proto` via `UseForwardedHeaders`, mantendo cookie `Secure` e HSTS atrás do proxy.
+- **Migração + seed no startup** em produção, controlados por config (`Database__MigrateOnStartup` / `Database__SeedOnStartup`) — a VM sobe a versão nova já migrada, sem passo manual.
+- **PostgreSQL sem porta exposta no host** — alcançável apenas pela rede interna do compose.
+- Imagem final roda como usuário não-root (`USER app`).
+
+Setup completo do servidor (firewall da OCI, DNS, secrets do workflow) em [`deploy/README.md`](deploy/README.md).
 
 ## Fora de escopo (consciente)
 
