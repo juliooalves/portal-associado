@@ -9,9 +9,7 @@
 
         @if (TempData["Sucesso"] is string sucesso)
         {
-            <div class="card elev-sm alert-success">
-                <span class="tag tag-accent-2">@sucesso</span>
-            </div>
+            <div hidden data-toast="success">@sucesso</div>
         }
 
         <div class="card elev-sm" style="margin-bottom: var(--space-4);">
@@ -30,7 +28,22 @@
             <p class="text-muted" style="font-size:13px; margin: 0 0 var(--space-3);">O único dado que você pode atualizar por aqui.</p>
 
             <form asp-controller="MeusDados" asp-action="AtualizarEndereco" method="post">
-                <div asp-validation-summary="ModelOnly"></div>
+                @if (ViewData.ModelState[string.Empty]?.Errors is { Count: > 0 } erros)
+                {
+                    foreach (var erro in erros)
+                    {
+                        <div hidden data-toast="danger">@erro.ErrorMessage</div>
+                    }
+                }
+
+                <div class="form-grid form-grid-cep">
+                    <div class="field">
+                        <label asp-for="Endereco.Cep"></label>
+                        <input asp-for="Endereco.Cep" class="input" placeholder="00000-000"
+                               inputmode="numeric" data-mask="cep" data-viacep maxlength="9" />
+                        <span asp-validation-for="Endereco.Cep" class="field-error"></span>
+                    </div>
+                </div>
 
                 <div class="form-grid form-grid-logradouro">
                     <div class="field">
@@ -100,12 +113,6 @@
                             </ul>
                         </div>
                         <span asp-validation-for="Endereco.Uf" class="field-error"></span>
-                    </div>
-                    <div class="field">
-                        <label asp-for="Endereco.Cep"></label>
-                        <input asp-for="Endereco.Cep" class="input" placeholder="00000-000"
-                               inputmode="numeric" data-mask="cep" maxlength="9" />
-                        <span asp-validation-for="Endereco.Cep" class="field-error"></span>
                     </div>
                 </div>
 

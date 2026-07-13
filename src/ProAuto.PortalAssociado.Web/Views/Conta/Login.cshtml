@@ -18,7 +18,13 @@
             <p class="login-sub">Acesse com seu CPF e a placa do veículo.</p>
 
             <form asp-controller="Conta" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
-                <div asp-validation-summary="ModelOnly"></div>
+                @if (ViewData.ModelState[string.Empty]?.Errors is { Count: > 0 } erros)
+                {
+                    foreach (var erro in erros)
+                    {
+                        <div hidden data-toast="danger">@erro.ErrorMessage</div>
+                    }
+                }
 
                 <div class="field" style="margin-bottom: var(--space-3);">
                     <label asp-for="Cpf"></label>
