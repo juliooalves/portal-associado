@@ -79,8 +79,8 @@ CPFs fictícios com dígitos verificadores válidos. Placas cobrem o formato ant
 dotnet test
 ```
 
-- **Unitários** (60): value objects (`Cpf` com dígito verificador, `Placa` antiga + Mercosul, `Endereco`), service com repository mockado (autenticação, atualização de endereço) e controllers de API.
-- **Integração** (10): Testcontainers sobe um PostgreSQL real e efêmero; cobre o fluxo completo (login → GET /me → PUT endereço), casos negativos (credencial errada → 401 genérico, sem auth → 401/redirect, payload inválido → 400), campos extras no payload ignorados e isolamento entre associados (anti-IDOR).
+- **Unitários** (63): value objects (`Cpf` com dígito verificador, `Placa` antiga + Mercosul, `Endereco`), service com repository mockado (autenticação, atualização de endereço) e controllers de API.
+- **Integração** (13): Testcontainers sobe um PostgreSQL real e efêmero; cobre o fluxo completo (login → GET /me → PUT endereço), casos negativos (credencial errada → 401 genérico, sem auth → 401/redirect, payload inválido → 400), campos extras no payload ignorados, isolamento entre associados (anti-IDOR) e páginas de erro.
 
 Os testes de integração exigem Docker em execução.
 
@@ -116,7 +116,7 @@ A aplicação roda em produção numa VM da Oracle Cloud, publicada em https://p
 push na main
    │
    ▼
-CI (ci.yml) ── restore → build → testes (70, inclui integração com Testcontainers)
+CI (ci.yml) ── restore → build → testes (inclui integração com Testcontainers)
    │  verde
    ▼
 Deploy (deploy.yml)
@@ -133,7 +133,7 @@ O Deploy só dispara com o CI verde (`workflow_run`) — commit que quebra teste
 Internet ──443──> Caddy (TLS automático via Let's Encrypt) ──8080──> app (Kestrel) ──> PostgreSQL
 ```
 
-- **Caddy** como reverse proxy: emissão e renovação de certificado automáticas; o app consome `X-Forwarded-Proto` via `UseForwardedHeaders`, mantendo cookie `Secure` e HSTS atrás do proxy.
+- **Caddy** como reverse proxy: emissão e renovação de certificado automáticas; o app consome `X-Forwarded-Proto` via `UseForwardedHeaders`, mantendo cookie `Secure` e HSTS atrás do proxy. O Caddy ainda injeta headers de hardening (`X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, CSP).
 - **Migração + seed no startup** em produção, controlados por config (`Database__MigrateOnStartup` / `Database__SeedOnStartup`) — a VM sobe a versão nova já migrada, sem passo manual.
 - **PostgreSQL sem porta exposta no host** — alcançável apenas pela rede interna do compose.
 - Imagem final roda como usuário não-root (`USER app`).
