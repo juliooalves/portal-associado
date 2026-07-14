@@ -65,7 +65,7 @@ Push na `main` (CI verde dispara o Deploy) ou rodar o workflow **Deploy** manual
 docker compose -f docker-compose.prod.yml logs -f app   # na VM, ver migração + seed
 ```
 
-Acessar `https://<subdominio>.duckdns.org` — credenciais de teste na tabela do README raiz.
+Acessar `https://portal-associado.duckdns.org` — credenciais de teste na tabela do README raiz.
 
 ## Decisões
 

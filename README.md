@@ -95,6 +95,8 @@ Os testes de integração exigem Docker em execução.
 
 Views: `/login` e `/meus-dados` (form POST clássico com anti-forgery e validação server-side).
 
+No formulário de endereço, o CEP é o primeiro campo e aciona a [API ViaCEP](https://viacep.com.br) para preencher logradouro, bairro, cidade e UF automaticamente. A consulta é feita no navegador (JS vanilla) e é só conveniência: se a API estiver indisponível, o formulário continua 100% preenchível à mão, e a validação server-side não depende dela.
+
 ## Decisões de arquitetura
 
 - **2 projetos + 2 de teste, camadas por pasta** (`Controllers/`, `Services/`, `Repositories/`, `Domain/`, `Contracts/`). Clean Architecture completa (4 assemblies) seria over-engineering para um domínio de uma entidade e duas operações — a testabilidade vem das interfaces (`IAssociadoService`, `IAssociadoRepository`), não da quantidade de projetos.
@@ -108,6 +110,17 @@ Views: `/login` e `/meus-dados` (form POST clássico com anti-forgery e validaç
 - Código em inglês, termos de domínio em português (`Associado`, `Placa`, `Endereco`).
 - `Nullable` habilitado + `TreatWarningsAsErrors` em todos os projetos.
 
+## Segurança
+
+Além do cookie `HttpOnly`/`Secure`/`SameSite=Strict`, do 401 genérico e do anti-IDOR descritos acima:
+
+- **Rate limiting no login** (API e form MVC): 5 tentativas por IP a cada 15 minutos; a sexta recebe `429 Too Many Requests`. CPF é enumerável (dígito verificador é computável) e placa é credencial semi-pública — força bruta é o ataque mais barato contra esse par, então o limite é agressivo.
+- **`X-Forwarded-For`/`X-Forwarded-Proto` aceitos só do proxy**: `KnownNetworks` restrito às faixas privadas (rede interna do Docker, onde vive o Caddy). Um cliente externo não consegue falsificar o IP de origem para escapar do rate limiter.
+- **Headers de segurança no Caddy**: `Content-Security-Policy` (scripts só do próprio host; `connect-src` liberado apenas para a ViaCEP), `X-Frame-Options: DENY` (a página de login não pode ser embutida em iframe — anti-clickjacking), `X-Content-Type-Options: nosniff` e `Referrer-Policy`.
+- **CPF mascarado na view** (`***.444.777-**`): a página Meus Dados não exibe o CPF completo — reduz exposição do dado em tela, print ou compartilhamento. A API `GET /me` continua retornando o dado completo do próprio associado autenticado.
+- **Anti-forgery token** em todos os POSTs de formulário; queries 100% parametrizadas via EF Core; Razor com auto-escaping (sem `Html.Raw`).
+- **Seed com credenciais públicas é decisão consciente**: o desafio exige que o avaliador consiga logar em segundos com as credenciais documentadas acima — este é um ambiente de demonstração, não um portal real com dados de associados verdadeiros.
+
 ## Deploy e pipeline (CI/CD)
 
 A aplicação roda em produção numa VM da Oracle Cloud, publicada em https://portal-associado.duckdns.org. O caminho de um commit até produção é totalmente automatizado:
@@ -116,7 +129,7 @@ A aplicação roda em produção numa VM da Oracle Cloud, publicada em https://p
 push na main
    │
    ▼
-CI (ci.yml) ── restore → build → testes (inclui integração com Testcontainers)
+CI (ci.yml) ── restore → build → testes (73, inclui integração com Testcontainers)
    │  verde
    ▼
 Deploy (deploy.yml)
@@ -133,7 +146,7 @@ O Deploy só dispara com o CI verde (`workflow_run`) — commit que quebra teste
 Internet ──443──> Caddy (TLS automático via Let's Encrypt) ──8080──> app (Kestrel) ──> PostgreSQL
 ```
 
-- **Caddy** como reverse proxy: emissão e renovação de certificado automáticas; o app consome `X-Forwarded-Proto` via `UseForwardedHeaders`, mantendo cookie `Secure` e HSTS atrás do proxy. O Caddy ainda injeta headers de hardening (`X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, CSP).
+- **Caddy** como reverse proxy: emissão e renovação de certificado automáticas + headers de segurança (CSP, `X-Frame-Options`, `nosniff`, `Referrer-Policy`); o app consome `X-Forwarded-For`/`X-Forwarded-Proto` via `UseForwardedHeaders` — aceitos apenas da rede interna do compose —, mantendo cookie `Secure`, HSTS e rate limiting por IP real atrás do proxy.
 - **Migração + seed no startup** em produção, controlados por config (`Database__MigrateOnStartup` / `Database__SeedOnStartup`) — a VM sobe a versão nova já migrada, sem passo manual.
 - **PostgreSQL sem porta exposta no host** — alcançável apenas pela rede interna do compose.
 - Imagem final roda como usuário não-root (`USER app`).
@@ -144,4 +157,3 @@ Setup completo do servidor (firewall da OCI, DNS, secrets do workflow) em [`depl
 
 - **CNPJ**: o portal de produção aceita PJ; a modelagem por value objects permite adicionar `Cnpj` sem refatorar.
 - **Senha + recuperação**: o portal real evoluiu de placa para senha; fora do escopo do enunciado.
-- **Rate limiting no login**: necessário em produção contra enumeração de CPF.

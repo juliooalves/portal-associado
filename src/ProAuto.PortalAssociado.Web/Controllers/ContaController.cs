@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using ProAuto.PortalAssociado.Web.Models;
 using ProAuto.PortalAssociado.Web.Services;
 
@@ -30,6 +31,7 @@ public sealed class ContaController : Controller
 
     [HttpPost("login")]
     [ValidateAntiForgeryToken]
+    [EnableRateLimiting("login")]
     public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null, CancellationToken cancellationToken = default)
     {
         ViewData["ReturnUrl"] = returnUrl;
