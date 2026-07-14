@@ -9,6 +9,7 @@ RUN dotnet publish src/ProAuto.PortalAssociado.Web/ProAuto.PortalAssociado.Web.c
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
+RUN mkdir /keys && chown app /keys
 ENV ASPNETCORE_HTTP_PORTS=8080
 EXPOSE 8080
 USER app
