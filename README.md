@@ -79,8 +79,8 @@ CPFs fictícios com dígitos verificadores válidos. Placas cobrem o formato ant
 dotnet test
 ```
 
-- **Unitários** (60): value objects (`Cpf` com dígito verificador, `Placa` antiga + Mercosul, `Endereco`), service com repository mockado (autenticação, atualização de endereço) e controllers de API.
-- **Integração** (10): Testcontainers sobe um PostgreSQL real e efêmero; cobre o fluxo completo (login → GET /me → PUT endereço), casos negativos (credencial errada → 401 genérico, sem auth → 401/redirect, payload inválido → 400), campos extras no payload ignorados e isolamento entre associados (anti-IDOR).
+- **Unitários** (63): value objects (`Cpf` com dígito verificador, `Placa` antiga + Mercosul, `Endereco`), service com repository mockado (autenticação, atualização de endereço) e controllers de API.
+- **Integração** (13): Testcontainers sobe um PostgreSQL real e efêmero; cobre o fluxo completo (login → GET /me → PUT endereço), casos negativos (credencial errada → 401 genérico, sem auth → 401/redirect, payload inválido → 400), campos extras no payload ignorados, isolamento entre associados (anti-IDOR) e páginas de erro.
 
 Os testes de integração exigem Docker em execução.
 

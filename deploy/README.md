@@ -43,6 +43,8 @@ mkdir -p ~/portal-associado && cd ~/portal-associado
 cp .env.example .env   # e editar: DOMAIN=<subdominio>.duckdns.org, POSTGRES_PASSWORD forte
 ```
 
+> **Atenção:** o CD só faz `pull` da imagem — mudanças em `docker-compose.prod.yml` ou `Caddyfile` no repositório **não chegam à VM sozinhas**. Sempre que esses arquivos mudarem, re-copiá-los para `~/portal-associado/` antes do próximo deploy (o `up -d` seguinte aplica).
+
 ## 5. Imagem no GHCR
 
 O workflow publica em `ghcr.io/juliooalves/portal-associado`. Após o primeiro push, tornar o package **público** (Settings do package → Danger Zone → Change visibility) — a VM faz `docker pull` sem autenticação. Alternativa: manter privado e `docker login ghcr.io` na VM com um PAT `read:packages`.
