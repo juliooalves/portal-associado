@@ -47,6 +47,7 @@ public class EnderecoTests
     [InlineData("1234567")]
     [InlineData("123456789")]
     [InlineData("")]
+    [InlineData("０１３１０１００")]
     public void Constructor_WithInvalidCep_Throws(string cep)
     {
         Assert.Throws<ArgumentException>(() => Valid(cep: cep));

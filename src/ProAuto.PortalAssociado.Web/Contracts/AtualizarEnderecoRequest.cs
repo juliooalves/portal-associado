@@ -35,7 +35,7 @@ public sealed class AtualizarEnderecoRequest
     public string Uf { get; init; } = string.Empty;
 
     [Required(ErrorMessage = "Informe o CEP.")]
-    [RegularExpression(@"^\d{5}-?\d{3}$", ErrorMessage = "CEP deve conter 8 dígitos.")]
+    [RegularExpression("^[0-9]{5}-?[0-9]{3}$", ErrorMessage = "CEP deve conter 8 dígitos.")]
     [Display(Name = "CEP")]
     public string Cep { get; init; } = string.Empty;
 

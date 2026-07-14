@@ -6,7 +6,7 @@ public sealed record Cpf
 
     public Cpf(string value)
     {
-        var digits = new string((value ?? string.Empty).Where(char.IsDigit).ToArray());
+        var digits = new string((value ?? string.Empty).Where(char.IsAsciiDigit).ToArray());
 
         if (digits.Length != 11)
         {

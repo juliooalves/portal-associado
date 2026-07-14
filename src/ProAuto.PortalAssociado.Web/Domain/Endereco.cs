@@ -64,7 +64,7 @@ public sealed class Endereco
 
     private static string ValidateCep(string cep)
     {
-        var digits = new string((cep ?? string.Empty).Where(char.IsDigit).ToArray());
+        var digits = new string((cep ?? string.Empty).Where(char.IsAsciiDigit).ToArray());
 
         if (digits.Length != 8)
         {
