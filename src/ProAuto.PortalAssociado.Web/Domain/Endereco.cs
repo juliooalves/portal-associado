@@ -44,13 +44,19 @@ public sealed class Endereco
         return value.Trim();
     }
 
+    private static readonly HashSet<string> UfsValidas = new(StringComparer.Ordinal)
+    {
+        "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG",
+        "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SE", "SP", "TO"
+    };
+
     private static string ValidateUf(string uf)
     {
         var normalized = (uf ?? string.Empty).Trim().ToUpperInvariant();
 
-        if (normalized.Length != 2 || !normalized.All(char.IsAsciiLetterUpper))
+        if (!UfsValidas.Contains(normalized))
         {
-            throw new ArgumentException("UF deve conter 2 letras.", nameof(uf));
+            throw new ArgumentException("UF inválida.", nameof(uf));
         }
 
         return normalized;

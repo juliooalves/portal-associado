@@ -36,6 +36,8 @@ public class EnderecoTests
     [InlineData("S")]
     [InlineData("SPX")]
     [InlineData("S1")]
+    [InlineData("ZZ")]
+    [InlineData("XX")]
     public void Constructor_WithInvalidUf_Throws(string uf)
     {
         Assert.Throws<ArgumentException>(() => Valid(uf: uf));
